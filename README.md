@@ -11,7 +11,7 @@ The waveform was sampled from early 90's equipment, and processed by recent soft
 ## Prerequisite
 [logue-sdk](https://github.com/korginc/logue-sdk)
 
-If you use pre-built binary, logue-sdk is not required. Simply transfer **PCMHit.ntkdigunit** to your NTS-1 using NTS-1 digital Librarian software.
+If you use pre-built binary, logue-sdk is not required. Simply transfer [PCMHit.ntkdigunit](https://github.com/kachine/nts1PCMHit/raw/main/PCMHit.ntkdigunit) to your NTS-1 using NTS-1 digital Librarian software.
 
 
 ## How to build
