@@ -17,7 +17,7 @@ If you use pre-built binary, logue-sdk is not required. Simply transfer [PCMHit.
 ## How to build
 You have to change PLATFORMDIR variable in Makefile, it should correspond to where you installed logue-sdk (something like below).
 ```Makefile
-PLATFORMDIR = $(PATHTO}/logue-sdk/platform/nutekt-digital
+PLATFORMDIR = ${PATHTO}/logue-sdk/platform/nutekt-digital
 ```
 
 Then, simply type "make" to build this project.
