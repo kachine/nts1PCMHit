@@ -7,11 +7,11 @@
 #include <PCMHit.h>
 
 // PCM oscillator
-float osc_pcm(uint8_t notenumber){
+float osc_pcm(uint8_t notenumber, uint8_t pitchmodifier){
   float sample = 0.f;
 
   // Read PCM waveform (w/o loop point) using linear interpolation
-  float position = PCMPOSCOEFF * osc_notehzf(notenumber) * VOICE.samplePosition;
+  float position = PCMPOSCOEFF * osc_w0f_for_note(notenumber, pitchmodifier) * k_samplerate * VOICE.samplePosition;
   float dec = position - (int16_t) position;  // Decimal part of position
   if(position < PCMLEN){
     sample = dec * PCMWAVE[MIN((int16_t) position + 1, PCMLEN-1)] + (1.f - dec) * PCMWAVE[(int16_t) position];
@@ -30,7 +30,7 @@ float osc_pcm(uint8_t notenumber){
 void OSC_INIT(uint32_t platform, uint32_t api)
 {
   // Initialize voice parameters
-  float pcmRootFreq = osc_notehzf(PCMROOTNOTE); // Original frequency of PCMWAVE
+  float pcmRootFreq = midi_to_hz_lut_f[PCMROOTNOTE]; // Original frequency of PCMWAVE
   PCMPOSCOEFF = (float) k_samplerate / PCMFS / pcmRootFreq;
   VOICE.notenumber = DUMMYNOTE;
   VOICE.samplePosition = 0;
@@ -48,8 +48,12 @@ void OSC_CYCLE(const user_osc_param_t * const params,
   // Last address of output buffer
   const q31_t * y_e = y + frames;
 
-  // MIDI note# of current process
+  // MIDI note# and pitch modifier of current process
+  // If pitch bend message has already received, note value may be differ from actual MIDI note#
+  // Pitch modifier value takes within 0 to 255, the value indicate 1/255 of semitone
+  // The pitch modifier is always upperward, so downer pitch bend is processed as a combination of note# decrement and adequate upperward pitch modifier.
   uint8_t note = params->pitch >> 8;
+  uint8_t mod = params->pitch & 0xFF;
 
   // Working memory to store current sample value
   // Effective range is -1.0 <= sample < 1.0 to convert into Q31 format later
@@ -66,7 +70,7 @@ void OSC_CYCLE(const user_osc_param_t * const params,
   // Process one sample by sample in frames
   while( y != y_e ) {
     // Generate wave sample
-    sample = osc_pcm(note);
+    sample = osc_pcm(note, mod);
     // Convert a sample into Q31 format, and write to output
     *(y++) = f32_to_q31(sample);
   }

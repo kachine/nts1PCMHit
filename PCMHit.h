@@ -708,7 +708,7 @@ struct _voice{
 };
 struct _voice VOICE;                // Global variable to keep voice parameters
 
-float osc_pcm(uint8_t notenumber);
+float osc_pcm(uint8_t notenumber, uint8_t pitchmodifier);
 void OSC_INIT(uint32_t platform, uint32_t api);
 void OSC_CYCLE(const user_osc_param_t * const params,
                int32_t *yn,

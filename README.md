@@ -26,5 +26,9 @@ $ make
 ```
 
 
+## Limitations
+Pitch bend message is not supported. If you use, unintentional note retrigger may happen.
+
+
 ---
 The names of products or companies are the trademarks or registered trademarks of their respective companies. These companies have no relation to this project.
